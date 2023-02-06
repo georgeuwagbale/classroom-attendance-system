@@ -739,7 +739,7 @@ public static boolean status = false;
                     if (role.equals("dean")){
                         
                         if(FacultyID > 0){
-                            ps = con.prepareStatement("insert into HOD(FacultyID) values(?)");
+                            ps = con.prepareStatement("insert into Dean(FacultyID) values(?)");
                             ps.setInt(1, FacultyID);
                             ps.executeUpdate();
                             JOptionPane.showMessageDialog(rootPane, "Faculty Member added as Dean", "Success", JOptionPane.INFORMATION_MESSAGE);

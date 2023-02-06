@@ -247,10 +247,15 @@ public class Retrieve extends javax.swing.JFrame {
                     //userID = rs.getInt("UserID");
                     System.out.println(StudentSignInView.checkForMultipleSigning(rs.getInt("UserID")));
                     if (!StudentSignInView.checkForMultipleSigning(rs.getInt("UserID"))){
-                        StudentSignInView.signAttendance(rs.getInt("UserID"));
-                        JOptionPane.showMessageDialog(rootPane, "Welcome to class " + rs.getString("FirstName")
+                        if (StudentSignInView.signAttendance(rs.getInt("UserID"))){
+                            JOptionPane.showMessageDialog(rootPane, "Attendance for this class is closed"
+                                ,"Attendance Closed", 0);
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, "Welcome to class " + rs.getString("FirstName")
                                 + " " + rs.getString("LastName")
                                 ,"Signed in", 1);
+                        }
+                        
                     }else{
                         JOptionPane.showMessageDialog(rootPane, "User already signed into class");
                     }

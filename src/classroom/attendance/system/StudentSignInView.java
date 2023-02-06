@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,7 +93,7 @@ public class StudentSignInView extends javax.swing.JFrame {
     }
     
     
-    public static void signAttendance(int userID){
+    public static boolean signAttendance(int userID){
         //Date
         //StartTime
         //CourseID
@@ -103,47 +104,59 @@ public class StudentSignInView extends javax.swing.JFrame {
         java.sql.Date date_ = new java.sql.Date(calendar.getTime().getTime());
         java.sql.Time time_ = new java.sql.Time(date_.getTime());
         
+        boolean attendanceClosed = true;
+        
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS","root", "example");
             
-            //PreparedStatement ps_ = con.prepareStatement("select StudentID from Student where UserID=?");
-            //ps_.setInt(1, userID);
-            //ResultSet rs_  = ps_.executeQuery();
+            PreparedStatement ps_ = con.prepareStatement("select * from StudentCourse where StudentID in("
+                    + "select StudentID from Student where UserID=?"
+                    + ")");
+            ps_.setInt(1, userID);
+            ResultSet rs_  = ps_.executeQuery();
             
-            //int studentID = 0;
+            int courseID = 0;
             
-            //while(rs_.next()){
-            //    studentID = rs_.getInt("StudentID");
+            while(rs_.next()){
+                courseID = rs_.getInt("CourseID");
             //    break;
-            //}
+            }
             
-            
-            PreparedStatement ps = con.prepareStatement("select * from Attendance where "
-                    + "Date=? and Status=?");
-            ps.setDate(1, date_);
-            ps.setInt(2, 1);
-            
-            ResultSet rs = ps.executeQuery();
-            
-            while(rs.next()){
-                java.sql.Time startTime = rs.getTime("StartTime");
-                if(startTime.getHours() == time_.getHours()){
-                    PreparedStatement ps1 = con.prepareStatement("insert into StudentAttendance("
-                            + "AttendanceID,StudentID,Status"
-                            + ") values(?,?,?)");
-                    ps1.setInt(1, rs.getInt("AttendanceID"));
-                    ps1.setInt(2, studentID);
-                    ps1.setString(3, "p");
-                    
-                    ps1.executeUpdate();
+            if (courseID > 0){
+                PreparedStatement ps = con.prepareStatement("select * from Attendance where "
+                        + "Date=? and Status=? and courseID=?");
+                ps.setDate(1, date_);
+                ps.setInt(2, 1);
+                ps.setInt(3, courseID);
+
+                ResultSet rs = ps.executeQuery();
+
+                while(rs.next()){
+                    java.sql.Time startTime = rs.getTime("StartTime");
+                    if(startTime.getHours() == time_.getHours()){
+                        attendanceClosed = false;
+                        PreparedStatement ps1 = con.prepareStatement("insert into StudentAttendance("
+                                + "AttendanceID,StudentID,Status"
+                                + ") values(?,?,?)");
+                        ps1.setInt(1, rs.getInt("AttendanceID"));
+                        ps1.setInt(2, studentID);
+                        ps1.setString(3, "p");
+
+                        ps1.executeUpdate();
+                    }
+
+
                 }
-                
+            }else{
+                JOptionPane.showMessageDialog(null, "You do not offer this course");
             }
             con.close();
+            
         }catch(Exception e){
             System.out.println(e);
         }
+        return attendanceClosed;
     }
     /**
      * This method is called from within the constructor to initialize the form.

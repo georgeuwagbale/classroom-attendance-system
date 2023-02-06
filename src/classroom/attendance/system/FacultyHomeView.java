@@ -75,12 +75,21 @@ private final Dictionary<String, Integer> courseNameDict;
             register_student_button.setVisible(false);
             start_attendance_button.setVisible(false);
             stop_attendance_button.setVisible(false);
+            
         }else if(this.loggedInFaculty.role.equals("Lecturer")){
             give_concession_button.setVisible(false);
             register_student_button.setVisible(false);
-            //view_attendance_percentage_button.setVisible(false);
+            
             view_attendance_sheet_button.setVisible(false);
             allocate_course_to_lecturer_button.setVisible(false);
+            
+        }else if(this.loggedInFaculty.role.equals("Dean")){
+            start_attendance_button.setVisible(false);
+            stop_attendance_button.setVisible(false);
+            register_student_button.setVisible(false);
+            allocate_course_to_lecturer_button.setVisible(false);
+            sign_student_out_button.setVisible(false);
+            
         }
         
     }
@@ -348,7 +357,7 @@ private final Dictionary<String, Integer> courseNameDict;
         //this.loggedInFaculty.allocateCourseToLecturer();
     }//GEN-LAST:event_allocate_course_to_lecturer_buttonActionPerformed
 
-    public String[] populateCourseOptions(){
+    public String[] populateLecturerCourseOptions(){
         String[] courseOptions = new String[3];
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -377,6 +386,33 @@ private final Dictionary<String, Integer> courseNameDict;
         return courseOptions;
     }
     
+    public String[] populateDeanCourseOptions(){
+        String[] courseOptions = new String[10];
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from Course where DepartmentID in ("
+                    + "select DepartmentID from Department where SchoolID in ("
+                    + "select SchoolID from Department where DepartmentID=?"
+                    + ")"
+                    + ")");
+            ps.setInt(1, this.loggedInFaculty.department);
+            
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while(rs.next()){
+                courseOptions[count] = rs.getString("Name");
+                this.courseNameDict.put(rs.getString("Name"), rs.getInt("CourseID"));
+                count++;
+            }
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return courseOptions;
+    }
+    
     public float getTotalAttendance(int courseID){
         float count = 0;
         try{
@@ -399,13 +435,25 @@ private final Dictionary<String, Integer> courseNameDict;
         return count;
     }
     
+    public void getParticularStudentPercentageAttendance(){
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("");
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
     private void view_attendance_percentage_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_attendance_percentage_buttonActionPerformed
         // TODO add your handling code here:
         
         if(this.loggedInFaculty.role.equals("Lecturer")){
             
             Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
-                    populateCourseOptions(), DISPOSE_ON_CLOSE);
+                    populateLecturerCourseOptions(), DISPOSE_ON_CLOSE);
             //System.out.println(value);
             
             if (value != null){
@@ -416,9 +464,37 @@ private final Dictionary<String, Integer> courseNameDict;
                         String.valueOf(value),getTotalAttendance(courseID)).setVisible(true);
             }
         }
+        
+        //String[] options = {"A Particular Student", "A Course"};
+        
+        if(this.loggedInFaculty.role.equals("Dean")){
+            //Object choice = JOptionPane.showInputDialog(rootPane, "For who?", "", 1, null,
+            //        options,DISPOSE_ON_CLOSE);
+            
+            //if(choice != null){
+            //    if(String.valueOf(choice).equals(options[0])){
+            //        Object matricNo = JOptionPane.showInputDialog(rootPane, "Enter Student's Matric No.", "Request", 1);
+                    
+                    
+            //        JOptionPane.showConfirmDialog(rootPane, "");
+            //    }
+            //}
+            
+            Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
+                    populateDeanCourseOptions(), DISPOSE_ON_CLOSE);
+            
+            if (value != null){
+                int courseID = this.courseNameDict.get(String.valueOf(value));
+                
+                // Use course to get the next view
+                new LecturerViewAttendancePercentage(courseID,
+                        String.valueOf(value),getTotalAttendance(courseID)).setVisible(true);
+            }
+            
+        }
     }//GEN-LAST:event_view_attendance_percentage_buttonActionPerformed
 
-   public void chechForMultipleAttendanceEntry(){
+   public void checkForMultipleAttendanceEntry(){
        
    } 
     
@@ -426,7 +502,7 @@ private final Dictionary<String, Integer> courseNameDict;
         // TODO add your handling code here:
         
         Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
-                    populateCourseOptions(), DISPOSE_ON_CLOSE);
+                    populateLecturerCourseOptions(), DISPOSE_ON_CLOSE);
         
         if (value != null){
             int courseID = this.courseNameDict.get(String.valueOf(value));
@@ -460,7 +536,7 @@ private final Dictionary<String, Integer> courseNameDict;
     private void stop_attendance_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stop_attendance_buttonActionPerformed
         // TODO add your handling code here:
         Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
-                    populateCourseOptions(), DISPOSE_ON_CLOSE);
+                    populateLecturerCourseOptions(), DISPOSE_ON_CLOSE);
         
         if (value != null){
             int courseID = this.courseNameDict.get(String.valueOf(value));
@@ -471,16 +547,26 @@ private final Dictionary<String, Integer> courseNameDict;
             try{
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                PreparedStatement ps = con.prepareStatement("update Attendance set"
-                        + "StopTime=?,Status=?"
-                        + "where CourseID=? and ");
+                
+                PreparedStatement ps = con.prepareStatement("select * from Attendance where "
+                    + "CourseID=? and Date=? and Status=?");
                 ps.setInt(1, courseID);
                 ps.setDate(2, date_);
-                ps.setTime(3, time_);
-                ps.setInt(4, 0);
-                ps.executeUpdate();
+                ps.setInt(3, 1);
+                ResultSet rs = ps.executeQuery();
                 
-                
+                while(rs.next()){
+                    java.sql.Time startTime = rs.getTime("StartTime");
+                    if(startTime.getHours() == time_.getHours()){
+                        PreparedStatement ps1 = con.prepareStatement("update Attendance set StopTime=?, Status=? where AttendanceID=?");
+                        ps1.setTime(1, time_);
+                        ps1.setInt(2, 0);
+                        ps1.setInt(3, rs.getInt("AttendanceID"));
+                        ps1.executeUpdate();
+                    }
+                }
+                con.close();
+                JOptionPane.showMessageDialog(rootPane, "Attendance Closed");
             }catch(Exception e){
                 System.out.println(e);
             }
