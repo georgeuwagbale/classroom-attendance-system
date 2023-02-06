@@ -37,12 +37,14 @@ private float totalAttendance;
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
             PreparedStatement ps = con.prepareStatement("select * from StudentAttendance where StudentID in("
-                    + "select StudentID from Student where AttendanceID in ("
-                    + "select AttendanceID from Attendance where CourseID=?"
-                    + ") and UserID=?"
+                    + "select StudentID from Student where UserID=?"
+                    + ")"
+                    + "and AttendanceID in("
+                    + " select AttendanceID from Attendance where CourseID=?"
                     + ")");
-            ps.setInt(1, this.courseID);
-            ps.setInt(2, userID);
+            ps.setInt(1, userID);
+            ps.setInt(2, this.courseID);
+            
             ResultSet rs = ps.executeQuery();
             
             while(rs.next()){

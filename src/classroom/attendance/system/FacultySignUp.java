@@ -24,6 +24,8 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -40,6 +42,7 @@ public static ByteArrayInputStream FingerPrintData;
 public static Integer FingerPrintSize;
 private Insert newInsert;
 public static boolean status = false;
+private final Dictionary<String, Integer> departmentNameDict;
 
     /**
      * Creates new form FacultySignUp
@@ -47,6 +50,7 @@ public static boolean status = false;
     public FacultySignUp() {
         initComponents();
         this.status = true;
+        this.departmentNameDict = new Hashtable<String, Integer>();
         StartFingerPrint();
     }
     
@@ -92,6 +96,26 @@ public static boolean status = false;
     }
 
     
+    public void populateComboBox(){
+        department_combo_box.removeAllItems();
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from Department");
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                System.out.println(rs.getString("Name"));
+                department_combo_box.addItem(rs.getString("Name"));
+                this.departmentNameDict.put(rs.getString("Name"), rs.getInt("DepartmentID"));
+            }
+            con.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,6 +159,8 @@ public static boolean status = false;
         program_coordinator_radio_button = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         login_button = new javax.swing.JButton();
+        department_combo_box = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         web_cam_button = new javax.swing.JButton();
         show_label = new javax.swing.JLabel();
@@ -278,6 +304,16 @@ public static boolean status = false;
             }
         });
 
+        department_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        department_combo_box.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                department_combo_boxActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel7.setText("Department");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -315,13 +351,17 @@ public static boolean status = false;
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(last_name_label)
                                     .addComponent(date_of_birth_label)))
-                            .addComponent(show_password_radio_button, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(faculty_id_field, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel2)))
+                                .addComponent(jLabel2))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(show_password_radio_button, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(219, 219, 219)
+                                .addComponent(jLabel7)))
                         .addGap(54, 54, 54)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(department_combo_box, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(phone_field)
                             .addComponent(last_name_field)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -331,7 +371,8 @@ public static boolean status = false;
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lecturer_radio_button)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(program_coordinator_radio_button))
+                                .addComponent(program_coordinator_radio_button)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(password_field_2)
                             .addComponent(date_of_birth_chooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(33, 33, 33))
@@ -380,7 +421,11 @@ public static boolean status = false;
                     .addComponent(jLabel5)
                     .addComponent(password_field_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(show_password_radio_button)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(show_password_radio_button)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(department_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(faculty_id_label)
@@ -396,7 +441,7 @@ public static boolean status = false;
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(login_button))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(204, 204, 204), new java.awt.Color(204, 204, 204), null, null), null));
@@ -502,7 +547,7 @@ public static boolean status = false;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(423, 423, 423)
@@ -587,6 +632,9 @@ public static boolean status = false;
             String middle_name = middle_name_field.getText();
             String email = signup_email_field.getText();
             String phone_number = phone_field.getText();
+            int departmentID = departmentNameDict.get(
+                    department_combo_box.getSelectedItem().toString());
+            
             String employee_id = faculty_id_field.getText();
             String gender = null;
             String role = null;
@@ -881,6 +929,11 @@ public static boolean status = false;
         this.dispose();
     }//GEN-LAST:event_login_buttonActionPerformed
 
+    private void department_combo_boxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_department_combo_boxActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_department_combo_boxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -921,6 +974,7 @@ public static boolean status = false;
     private com.toedter.calendar.JDateChooser date_of_birth_chooser;
     private javax.swing.JLabel date_of_birth_label;
     private javax.swing.JRadioButton dean_radio_button;
+    private javax.swing.JComboBox<String> department_combo_box;
     public static javax.swing.JLabel dialog_box_label;
     private javax.swing.JLabel email_label;
     private javax.swing.JTextField faculty_id_field;
@@ -937,6 +991,7 @@ public static boolean status = false;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

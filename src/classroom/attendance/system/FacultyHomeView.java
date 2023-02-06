@@ -251,6 +251,11 @@ private final Dictionary<String, Integer> courseNameDict;
         view_attendance_sheet_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         view_attendance_sheet_button.setText("View Attendance Sheet");
         view_attendance_sheet_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        view_attendance_sheet_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view_attendance_sheet_buttonActionPerformed(evt);
+            }
+        });
 
         view_attendance_percentage_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         view_attendance_percentage_button.setText("View Attendance Percentage");
@@ -413,6 +418,54 @@ private final Dictionary<String, Integer> courseNameDict;
         return courseOptions;
     }
     
+    public String[] populateProgramCoordinatorCourseOptions(){
+        String[] courseOptions = new String[10];
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from Course where DepartmentID=?");
+            ps.setInt(1, this.loggedInFaculty.department);
+            
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while(rs.next()){
+                courseOptions[count] = rs.getString("Name");
+                this.courseNameDict.put(rs.getString("Name"), rs.getInt("CourseID"));
+                count++;
+            }
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return courseOptions;
+    }
+    
+    
+    public String[] populateHODCourseOptions(){
+        String[] courseOptions = new String[10];
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from Course where DepartmentID=?");
+            ps.setInt(1, this.loggedInFaculty.department);
+            
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while(rs.next()){
+                courseOptions[count] = rs.getString("Name");
+                this.courseNameDict.put(rs.getString("Name"), rs.getInt("CourseID"));
+                count++;
+            }
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return courseOptions;
+    }
+    
+    
     public float getTotalAttendance(int courseID){
         float count = 0;
         try{
@@ -435,17 +488,7 @@ private final Dictionary<String, Integer> courseNameDict;
         return count;
     }
     
-    public void getParticularStudentPercentageAttendance(){
-        
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-            PreparedStatement ps = con.prepareStatement("");
-            
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }
+    
     
     private void view_attendance_percentage_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_attendance_percentage_buttonActionPerformed
         // TODO add your handling code here:
@@ -491,6 +534,33 @@ private final Dictionary<String, Integer> courseNameDict;
                         String.valueOf(value),getTotalAttendance(courseID)).setVisible(true);
             }
             
+        }
+        
+        if(this.loggedInFaculty.role.equals("HOD")){
+            Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
+                    populateHODCourseOptions(), DISPOSE_ON_CLOSE);
+            
+            if (value != null){
+                int courseID = this.courseNameDict.get(String.valueOf(value));
+                
+                // Use course to get the next view
+                new LecturerViewAttendancePercentage(courseID,
+                        String.valueOf(value),getTotalAttendance(courseID)).setVisible(true);
+            }
+            
+        }
+        
+        if (this.loggedInFaculty.role.equals("Program Coordinator")){
+            Object value = JOptionPane.showInputDialog(rootPane, "Course", "Select", 1, null,
+                    populateProgramCoordinatorCourseOptions(), DISPOSE_ON_CLOSE);
+            
+            if (value != null){
+                int courseID = this.courseNameDict.get(String.valueOf(value));
+                
+                // Use course to get the next view
+                new LecturerViewAttendancePercentage(courseID,
+                        String.valueOf(value),getTotalAttendance(courseID)).setVisible(true);
+            }
         }
     }//GEN-LAST:event_view_attendance_percentage_buttonActionPerformed
 
@@ -573,6 +643,121 @@ private final Dictionary<String, Integer> courseNameDict;
             
         }
     }//GEN-LAST:event_stop_attendance_buttonActionPerformed
+    
+    public float getSumOfAttendanceSheetForACourse(int courseID){
+        float count = 0;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select AttendanceID from Attendance where CourseID=?");
+            ps.setInt(1, courseID);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()){
+                count++;
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return count;
+    }
+    
+    public float getSumofAttendanceSignedByStudent(int courseID, String matricNo){
+        float count = 0;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from StudentAttendance where StudentID in("
+                    + "select StudentID from Student where MatricNo=?"
+                    + ") and AttendanceID in("
+                    + "select AttendanceID from Attendance where CourseID=?"
+                    + ")");
+            ps.setString(1, matricNo);
+            ps.setInt(2, courseID);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                count++;
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return count;
+    }
+    
+    
+    public boolean isStudentAMemberOfSchool(int departmentID){
+        boolean isStudent= false;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+            PreparedStatement ps = con.prepareStatement("select SchoolID from Department where DepartmentID=?");
+            ps.setInt(1, departmentID);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                isStudent = true;
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return isStudent;
+    }
+    
+    
+    
+    private void view_attendance_sheet_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_attendance_sheet_buttonActionPerformed
+        String attendanceSheet = "";
+        String courseName = "";
+        String courseCode  = "";
+        
+        Object value = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
+                "Matric No", 1);
+        
+        if(value != null){
+            String matricNo = String.valueOf(value);
+            
+            try{
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+                PreparedStatement ps = con.prepareStatement("select CourseID from StudentCourse where StudentID in ("
+                        + "select StudentID from Student where MatricNo=?"
+                        + ")");
+                ps.setString(1, matricNo);
+                ResultSet rs = ps.executeQuery();
+                
+                while(rs.next()){
+                    //courseName = this.courseNameDict.get(rs.getInt("CourseID"));
+                    ps = con.prepareStatement("select * from Course where CourseID=?");
+                    ps.setInt(1, rs.getInt("CourseID"));
+                    ResultSet rs1 = ps.executeQuery();
+                    
+                    while(rs1.next()){
+                        courseName = rs1.getString("Name");
+                        courseCode = rs1.getString("Code");
+                    }
+                    
+                    float totalAttendanceSheet = getSumOfAttendanceSheetForACourse(
+                            rs.getInt("CourseID")
+                    );
+                    float totalAttendanceSheetSigned = getSumofAttendanceSignedByStudent(
+                            rs.getInt("CourseID"), matricNo
+                    );
+                    //System.out.println(totalAttendanceSheetSigned);
+                    float attendancePercentage = 0;
+                    if(totalAttendanceSheetSigned > 0){
+                        attendancePercentage = (totalAttendanceSheet / totalAttendanceSheetSigned) * 100;
+                    }
+                    
+                    attendanceSheet += "\n" + courseName + " : " + courseCode + " " + String.valueOf(attendancePercentage);
+                    
+                }
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
+        System.out.println(attendanceSheet);
+    }//GEN-LAST:event_view_attendance_sheet_buttonActionPerformed
 
     /**
      * @param args the command line arguments

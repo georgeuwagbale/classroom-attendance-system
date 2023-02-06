@@ -75,7 +75,7 @@ public class StudentSignInView extends javax.swing.JFrame {
                     
                     ResultSet rs2 = ps2.executeQuery();
                     while(rs2.next()){
-                        signedIn = true;
+                        signedIn = true; // Student has signed in
                     }
                     
                     
@@ -94,11 +94,6 @@ public class StudentSignInView extends javax.swing.JFrame {
     
     
     public static boolean signAttendance(int userID){
-        //Date
-        //StartTime
-        //CourseID
-        //Status
-        // The above are needed to get a particular AttendanceID
         
         Calendar calendar = Calendar.getInstance();
         java.sql.Date date_ = new java.sql.Date(calendar.getTime().getTime());
@@ -110,6 +105,7 @@ public class StudentSignInView extends javax.swing.JFrame {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS","root", "example");
             
+            // Get Courses offered by Student
             PreparedStatement ps_ = con.prepareStatement("select * from StudentCourse where StudentID in("
                     + "select StudentID from Student where UserID=?"
                     + ")");
@@ -120,8 +116,9 @@ public class StudentSignInView extends javax.swing.JFrame {
             
             while(rs_.next()){
                 courseID = rs_.getInt("CourseID");
-            //    break;
+                break;
             }
+            //End
             
             if (courseID > 0){
                 PreparedStatement ps = con.prepareStatement("select * from Attendance where "
