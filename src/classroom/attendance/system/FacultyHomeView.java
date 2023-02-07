@@ -735,53 +735,55 @@ private final Dictionary<String, Integer> courseNameDict;
         String courseName = "";
         String courseCode  = "";
         
-        Object value = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
-                "Matric No", 1);
-        
-        if(value != null){
-            String matricNo = String.valueOf(value);
-            
-            if(isStudentAMemberOfDepartment(this.loggedInFaculty.department, matricNo)){        
-                try{
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                    PreparedStatement ps = con.prepareStatement("select CourseID from StudentCourse where StudentID in ("
-                            + "select StudentID from Student where MatricNo=?"
-                            + ")");
-                    ps.setString(1, matricNo);
-                    ResultSet rs = ps.executeQuery();
+        if(this.loggedInFaculty.role.equals("HOD") || this.loggedInFaculty.role.equals("Program Coordinator")){
+            Object value = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
+                    "Matric No", 1);
 
-                    while(rs.next()){
-                        //courseName = this.courseNameDict.get(rs.getInt("CourseID"));
-                        ps = con.prepareStatement("select * from Course where CourseID=?");
-                        ps.setInt(1, rs.getInt("CourseID"));
-                        ResultSet rs1 = ps.executeQuery();
+            if(value != null){
+                String matricNo = String.valueOf(value);
 
-                        while(rs1.next()){
-                            courseName = rs1.getString("Name");
-                            courseCode = rs1.getString("Code");
+                if(isStudentAMemberOfDepartment(this.loggedInFaculty.department, matricNo)){        
+                    try{
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+                        PreparedStatement ps = con.prepareStatement("select CourseID from StudentCourse where StudentID in ("
+                                + "select StudentID from Student where MatricNo=?"
+                                + ")");
+                        ps.setString(1, matricNo);
+                        ResultSet rs = ps.executeQuery();
+
+                        while(rs.next()){
+                            //courseName = this.courseNameDict.get(rs.getInt("CourseID"));
+                            ps = con.prepareStatement("select * from Course where CourseID=?");
+                            ps.setInt(1, rs.getInt("CourseID"));
+                            ResultSet rs1 = ps.executeQuery();
+
+                            while(rs1.next()){
+                                courseName = rs1.getString("Name");
+                                courseCode = rs1.getString("Code");
+                            }
+
+                            float totalAttendanceSheet = getSumOfAttendanceSheetForACourse(
+                                    rs.getInt("CourseID")
+                            );
+                            float totalAttendanceSheetSigned = getSumofAttendanceSignedByStudent(
+                                    rs.getInt("CourseID"), matricNo
+                            );
+
+                            float attendancePercentage = 0;
+                            if(totalAttendanceSheetSigned > 0){
+                                attendancePercentage = (totalAttendanceSheet / totalAttendanceSheetSigned) * 100;
+                            }
+
+                            attendanceSheet += "\n" + courseName + " : " + courseCode + " " + String.valueOf(attendancePercentage);
+
                         }
-
-                        float totalAttendanceSheet = getSumOfAttendanceSheetForACourse(
-                                rs.getInt("CourseID")
-                        );
-                        float totalAttendanceSheetSigned = getSumofAttendanceSignedByStudent(
-                                rs.getInt("CourseID"), matricNo
-                        );
-                        
-                        float attendancePercentage = 0;
-                        if(totalAttendanceSheetSigned > 0){
-                            attendancePercentage = (totalAttendanceSheet / totalAttendanceSheetSigned) * 100;
-                        }
-
-                        attendanceSheet += "\n" + courseName + " : " + courseCode + " " + String.valueOf(attendancePercentage);
-
+                    }catch(Exception e){
+                        System.out.println(e);
                     }
-                }catch(Exception e){
-                    System.out.println(e);
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Student is not in this department");
                 }
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Student is not in this department");
             }
         }
         System.out.println(attendanceSheet);

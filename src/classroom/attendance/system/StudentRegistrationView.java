@@ -817,23 +817,25 @@ private int userID;
             jFileChooser1.showOpenDialog(null);
 
             File file = jFileChooser1.getSelectedFile();
-            filename = file.getAbsolutePath();
-            String path = file.getAbsolutePath();
-            show_field.setText(path);
-            Image image = Toolkit.getDefaultToolkit().createImage(path);
-            image = image.getScaledInstance(show_label.getWidth(),
-                show_label.getHeight(), Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(image);
-            show_label.setIcon(icon);
-            File image_ = new File(filename);
-            FileInputStream files = new FileInputStream(image_);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] Byte = new byte[1024];
+            if (file != null){
+                filename = file.getAbsolutePath();
+                String path = file.getAbsolutePath();
+                show_field.setText(path);
+                Image image = Toolkit.getDefaultToolkit().createImage(path);
+                image = image.getScaledInstance(show_label.getWidth(),
+                    show_label.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(image);
+                show_label.setIcon(icon);
+                File image_ = new File(filename);
+                FileInputStream files = new FileInputStream(image_);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] Byte = new byte[1024];
 
-            for (int i; (i = files.read(Byte)) != -1;){
-                baos.write(Byte, 0, i);
+                for (int i; (i = files.read(Byte)) != -1;){
+                    baos.write(Byte, 0, i);
+                }
+                photo = baos.toByteArray();
             }
-            photo = baos.toByteArray();
 
         }catch (HeadlessException | IOException e){
             System.out.println(e);

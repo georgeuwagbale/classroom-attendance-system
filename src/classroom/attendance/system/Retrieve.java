@@ -246,6 +246,7 @@ public class Retrieve extends javax.swing.JFrame {
                     System.out.println(rs.getString("LastName"));
                     //userID = rs.getInt("UserID");
                     System.out.println(StudentSignInView.checkForMultipleSigning(rs.getInt("UserID")));
+                    
                     if (!StudentSignInView.checkForMultipleSigning(rs.getInt("UserID"))){
                         if (StudentSignInView.signAttendance(rs.getInt("UserID"))){
                             JOptionPane.showMessageDialog(rootPane, "Attendance for this class is closed"
