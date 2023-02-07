@@ -4,63 +4,54 @@
  */
 package classroom.attendance.system;
 
-
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author uwagb
  */
-public class AddRemoveCourseView extends javax.swing.JFrame {
+public class CourseRegistrationView extends javax.swing.JFrame {
 private final Dictionary<String, Integer> courseNameDict;
-private int LecturerID;
+private int userID;
 private int departmentID;
     /**
-     * Creates new form AddRemoveCourseView
+     * Creates new form CourseRegistrationView
      */
-    public AddRemoveCourseView(int LecturerID, int DepartmentID) {
-        
+    public CourseRegistrationView(int userID, int departmentID) {
         initComponents();
         this.courseNameDict = new Hashtable<String, Integer>();
-        this.LecturerID = LecturerID;
-        this.departmentID = DepartmentID;
-        populateComboBox();
+        this.userID = userID;
+        this.departmentID = departmentID;
         populateLecturerInfo();
-        populateDataList();
-        //populateComboBox();
     }
+
+    
     
     public void populateLecturerInfo(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
             PreparedStatement ps = con.prepareStatement(""
-                    + "select FirstName, LastName from User where UserID in("
-                    + "select UserID from Faculty where FacultyID in("
-                    + "select FacultyID from Lecturer where LecturerID=?"
-                    + ")"
-                    + ")");
-            ps.setInt(1, this.LecturerID);
+                    + "select FirstName, LastName from User where UserID=?");
+            ps.setInt(1, this.userID);
             ResultSet rs = ps.executeQuery();
             
             while(rs.next()){
-                lecturer_name_label.setText(rs.getString("FirstName")
+                student_name_label.setText(rs.getString("FirstName")
                         +" "+ rs.getString("LastName"));
             }
             
             PreparedStatement ps1 = con.prepareStatement(""
                     + "select Name from Department where DepartmentID in("
-                    + "select DepartmentID from Faculty where FacultyID in("
-                    + "select FacultyID from Lecturer where LecturerID=?"
-                    + ")"
+                    + "select DepartmentID from Student where UserID=?"
                     + ")");
-            ps1.setInt(1,this.LecturerID);
+            ps1.setInt(1,this.userID);
             ResultSet rs1 = ps1.executeQuery();
             
             while(rs1.next()){
@@ -71,9 +62,6 @@ private int departmentID;
         }
         
     }
-    
-  
-    
     
     public void populateComboBox(){
         
@@ -106,9 +94,11 @@ private int departmentID;
             Connection con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
             PreparedStatement ps = con.prepareStatement(""
                     + "select Name, CourseID from Course where CourseID in("
-                    + "select CourseID from LecturerCourse where LecturerID=?"
+                    + "select CourseID from StudentCourse where StudentID in ("
+                    + "select StudentID from Student where UserID=?"
+                    + ")"
                     + ")");
-            ps.setInt(1, this.LecturerID);
+            ps.setInt(1, this.userID);
             ResultSet rs = ps.executeQuery();
             
             int position = 0;
@@ -128,6 +118,7 @@ private int departmentID;
             System.out.println(e);
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -137,17 +128,16 @@ private int departmentID;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        lecturer_name_label = new javax.swing.JLabel();
+        student_name_label = new javax.swing.JLabel();
         department_label = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         data_list = new javax.swing.JList<>();
         combo_box = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lecturer_name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lecturer_name_label.setText("Lecturer's Name");
+        student_name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        student_name_label.setText("Student's Name");
 
         department_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         department_label.setText("Department");
@@ -167,51 +157,38 @@ private int departmentID;
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lecturer_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                        .addComponent(department_label, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(39, 39, 39))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lecturer_name_label)
-                    .addComponent(department_label))
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(41, 41, 41)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(student_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(department_label, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(199, 199, 199))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(student_name_label)
+                    .addComponent(department_label))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                .addGap(11, 11, 11)
+                .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
         );
 
         pack();
@@ -224,19 +201,19 @@ private int departmentID;
             int CourseID = this.courseNameDict.get(item_clicked);
 
             int value = JOptionPane.showConfirmDialog(rootPane,
-                    "Are you sure you want to remove course", "Course Removal", 0, 2);
+                "Are you sure you want to remove course", "Course Removal", 0, 2);
 
             if (value == 0){
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     Connection con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                    PreparedStatement ps = con.prepareStatement("delete from LecturerCourse where CourseID=?");
+                    PreparedStatement ps = con.prepareStatement("delete from StudentCourse where CourseID=?");
                     ps.setInt(1, CourseID);
                     ps.execute();
                     con.close();
-                    
+
                     populateDataList();
-                    HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
+                    // HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
                 }catch(Exception e){
                     System.out.println(e);
                 }
@@ -244,14 +221,17 @@ private int departmentID;
         }
     }//GEN-LAST:event_data_listMouseClicked
 
-    public boolean checkForCourseMultiplicity(int lecturerID, int courseID){
+    
+    public boolean checkForCourseMultiplicity(int userID, int courseID){
         boolean isMultiple = false;
         
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-            PreparedStatement ps = con.prepareStatement("select * from LecturerCourse where LecturerID=? and CourseID=?");
-            ps.setInt(1, lecturerID);
+            PreparedStatement ps = con.prepareStatement("select * from StudentCourse where StudentID in("
+                    + "select StudentID from Student where UserID=?"
+                    + ") and CourseID=?");
+            ps.setInt(1, userID);
             ps.setInt(2,courseID);
             ResultSet rs = ps.executeQuery();
             
@@ -266,36 +246,45 @@ private int departmentID;
         return isMultiple;
     } 
     
+    
     private void combo_boxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_boxActionPerformed
         // TODO add your handling code here:
         String selectedCourse = combo_box.getSelectedItem().toString();
-                
+
         if (selectedCourse != null){
             int CourseID = this.courseNameDict.get(selectedCourse);
             int value = JOptionPane.showConfirmDialog(rootPane,
-                        "Are you sure you want to add " + selectedCourse , "Course Addition", 0, 2);
+                "Are you sure you want to add " + selectedCourse , "Course Addition", 0, 2);
             if (value == 0){
-                
-                if(!checkForCourseMultiplicity(this.LecturerID, CourseID)){
+
+                if(!checkForCourseMultiplicity(this.userID, CourseID)){
                     try{
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                        PreparedStatement ps = con.prepareStatement("insert into LecturerCourse("
-                                + "LecturerID,CourseID"
-                                + ")"
-                                + "values (?,?)");
-                        ps.setInt(1, this.LecturerID);
-                        ps.setInt(2, CourseID);
-                        ps.executeUpdate();
+                        PreparedStatement ps1 = con.prepareStatement("select StudentID from Student where UserID=?");
+                        ps1.setInt(1, this.userID);
+                        ResultSet rs1 = ps1.executeQuery();
+                        
+                        while(rs1.next()){
+                            PreparedStatement ps = con.prepareStatement("insert into StudentCourse("
+                            + "StudentID,CourseID"
+                            + ")"
+                            + "values (?,?)");
+                            ps.setInt(1, rs1.getInt("StudentID"));
+                            ps.setInt(2, CourseID);
+                            ps.executeUpdate();
+                            break;
+                        }
+                        
                         con.close();
 
                         populateDataList();
-                        HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
+                        //HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
                     }catch(Exception e){
                         System.out.println(e);
                     }
                 }else{
-                    JOptionPane.showMessageDialog(rootPane, "Course already assigned to Lecturer", "Error", 0);
+                    JOptionPane.showMessageDialog(rootPane, "Course already assigned to Student", "Error", 0);
                 }
             }
         }
@@ -318,20 +307,20 @@ private int departmentID;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddRemoveCourseView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CourseRegistrationView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddRemoveCourseView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CourseRegistrationView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddRemoveCourseView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CourseRegistrationView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddRemoveCourseView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CourseRegistrationView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new AddRemoveCourseView(4).setVisible(true);
+                //new CourseRegistrationView().setVisible(true);
             }
         });
     }
@@ -340,8 +329,7 @@ private int departmentID;
     private javax.swing.JComboBox<String> combo_box;
     private javax.swing.JList<String> data_list;
     private javax.swing.JLabel department_label;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lecturer_name_label;
+    private javax.swing.JLabel student_name_label;
     // End of variables declaration//GEN-END:variables
 }

@@ -43,7 +43,7 @@ public static Integer FingerPrintSize;
 private Insert newInsert;
 private final Dictionary<String, Integer> departmentNameDict;
 public static boolean status = false;
-
+private int userID;
     /**
      * Creates new form StudentRegistrationView
      */
@@ -740,7 +740,7 @@ public static boolean status = false;
                     //int UserID = 0;
 
                     while(rs.next()){
-                        //UserID = rs.getInt("UserID");
+                        this.userID = rs.getInt("UserID");
                         ps = con.prepareStatement("insert into Student("
                                 + "UserID,MatricNo,DepartmentID,Level"
                                 + ") values(?,?,?,?)");
@@ -775,13 +775,8 @@ public static boolean status = false;
                     show_field.setText(null);
                     finger_print_show_label.setIcon(null);
                     
-
-                    //FacultyLogIn newLogin = new FacultyLogIn();
-                    //newLogin.show();
-                    //newLogin.setVisible(true);
-                    //this.newInsert.stop();
-                    //this.newInsert.dispose();
-                    //this.dispose();
+                    new CourseRegistrationView(this.userID, departmentID).setVisible(true);
+                    
                 }else{
                     JOptionPane.showMessageDialog(null, "Password Mismatch", "Error", JOptionPane.ERROR_MESSAGE);
                 }

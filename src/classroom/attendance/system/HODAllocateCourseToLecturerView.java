@@ -19,20 +19,23 @@ import javax.swing.table.DefaultTableModel;
  * @author uwagb
  */
 public class HODAllocateCourseToLecturerView extends javax.swing.JFrame {
-private final Dictionary<String, Integer> userNameDict; 
+private static Dictionary<String, Integer> userNameDict; 
 private int departmentID;
+static DefaultTableModel td;
     /**
      * Creates new form HODAllocateCourseToLecturerView
      */
     public HODAllocateCourseToLecturerView(int DepartmentID) {
+        
         initComponents();
+        this.td = (DefaultTableModel)data_table.getModel();
         this.departmentID = DepartmentID; 
         this.userNameDict = new Hashtable<String, Integer>();
         populateDataTable(DepartmentID);
     }
     
-    public void populateDataTable(int DepartmentID){
-        DefaultTableModel td = (DefaultTableModel)data_table.getModel();
+    public static void populateDataTable(int DepartmentID){
+        
         //String LecturerName = null;
         //String LecturerCourse = "";
         
@@ -50,7 +53,10 @@ private int departmentID;
             int LecturerID = 0;
             
             while (rs.next()){
-                String[] data = new String[2];
+                String[] data = {
+                    "",
+                    ""
+                };
                 
                 LecturerID = rs.getInt("LecturerID");
                 //System.out.println("Lecturer: " + rs.getString("LecturerID"));
@@ -60,14 +66,20 @@ private int departmentID;
                              + "select Name from Course where CourseID in("
                              + "select CourseID from LecturerCourse where LecturerID=?"
                              + ")");
+                    
                      ps1.setInt(1,LecturerID);
+                     
                      ResultSet rs1 = ps1.executeQuery();
 
                      //String LecturerCourse = "";
-                     while (rs1.next()){
+                        while (rs1.next()){
                          //System.out.println("Course: " + rs1.getString("Name"));
-                         data[1] += " " + rs1.getString("Name") + ";";
-                     }
+                             if (rs1.getString("Name") != null){
+                                data[1] += " " + rs1.getString("Name") + ";";
+                            }
+                         
+                        }
+                     
                      // End
                      
                      //System.out.println("Course: "+ data[1]);
@@ -86,16 +98,34 @@ private int departmentID;
                     while (rs2.next()){
                          //System.out.println("User: " + rs2.getString("FirstName") + " " + rs2.getString("LastName"));
                          data[0] = rs2.getString("FirstName") + " " + rs2.getString("LastName");
-                         this.userNameDict.put(data[0], LecturerID);
+                         HODAllocateCourseToLecturerView.userNameDict.put(data[0], LecturerID);
                     } 
                     // End
                 }
-
-                td.addRow(data);
+                
+                
+                boolean flag = true;
+                int td_row = HODAllocateCourseToLecturerView.td.getRowCount();
+                for(int i=0; i<td_row; i++){
+                    System.out.println(data[1]);
+                    if(HODAllocateCourseToLecturerView.td.getValueAt(i, 0).equals(data[0]) ){
+                        //String courses = (String) HODAllocateCourseToLecturerView.td.getValueAt(i, 1);
+                        
+                        HODAllocateCourseToLecturerView.td.setValueAt(data[1], i, 1);
+                        flag = false;
+                    }
+                    
+                }
+                
+                if(flag){
+                    HODAllocateCourseToLecturerView.td.addRow(data);
+                }
+                
+                
                 // End
-                con.close();
+                
             }
-             
+             con.close();
          
         }catch(Exception e){
             System.out.print(e);
@@ -146,24 +176,24 @@ private int departmentID;
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                .addGap(40, 40, 40))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addGap(19, 19, 19)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,12 +214,13 @@ private int departmentID;
             LecturerID = this.userNameDict.get(LecturerName);
             //System.out.println("Name: " + LecturerName +"; " + "ID: " + LecturerID);
             // Instantial the Add or Remove Course View
-            new AddRemoveCourseView(LecturerID).setVisible(true);
-            populateDataTable(this.departmentID);
+            new AddRemoveCourseView(LecturerID, this.departmentID).setVisible(true);
+            
             // End
         }catch (Exception e){
             System.out.println(e);
         }
+        //populateDataTable(this.departmentID);
     }//GEN-LAST:event_data_tableMouseClicked
 
     /**

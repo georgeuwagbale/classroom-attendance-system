@@ -112,7 +112,7 @@ private final Dictionary<String, Integer> courseNameDict;
         department_label = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         role_label = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        logout_button = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         register_student_button = new javax.swing.JButton();
@@ -163,9 +163,14 @@ private final Dictionary<String, Integer> courseNameDict;
         role_label.setText("role");
         role_label.setOpaque(true);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Logout");
-        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        logout_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        logout_button.setText("Logout");
+        logout_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        logout_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logout_buttonActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setText("Change Password");
@@ -181,7 +186,7 @@ private final Dictionary<String, Integer> courseNameDict;
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(logout_button, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -228,7 +233,7 @@ private final Dictionary<String, Integer> courseNameDict;
                     .addComponent(role_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(logout_button)
                     .addComponent(jButton2))
                 .addGap(22, 22, 22))
         );
@@ -644,6 +649,7 @@ private final Dictionary<String, Integer> courseNameDict;
         }
     }//GEN-LAST:event_stop_attendance_buttonActionPerformed
     
+    
     public float getSumOfAttendanceSheetForACourse(int courseID){
         float count = 0;
         try{
@@ -661,6 +667,8 @@ private final Dictionary<String, Integer> courseNameDict;
         }
         return count;
     }
+    
+    
     
     public float getSumofAttendanceSignedByStudent(int courseID, String matricNo){
         float count = 0;
@@ -686,28 +694,29 @@ private final Dictionary<String, Integer> courseNameDict;
     }
     
     
-    public boolean isStudentAMemberOfSchool(int departmentID, String matricNo){
+    public boolean isStudentAMemberOfDepartment(int departmentID, String matricNo){
         boolean isStudent= false;
-        int schoolID = 0;
+        //int schoolID = 0;
+        
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-            PreparedStatement ps = con.prepareStatement("select SchoolID from Department where DepartmentID=?");
-            ps.setInt(1, departmentID);
-            ResultSet rs = ps.executeQuery();
+        //    PreparedStatement ps = con.prepareStatement("select SchoolID from Department where DepartmentID=?");
+        //    ps.setInt(1, departmentID);
+        //    ResultSet rs = ps.executeQuery();
             
-            while(rs.next()){
-                schoolID = rs.getInt("SchoolID");
-            }
+        //    while(rs.next()){
+        //        schoolID = rs.getInt("SchoolID");
+        //        break;
+        //    }
             
-            ps = con.prepareStatement("select SchoolID from Department where DepartmentID in("
-                    + "select DepartmentID from Student where MatricNo=?"
-                    + ")");
+            //System.out.println("SchoolID: " + String.valueOf(schoolID));
+            PreparedStatement ps = con.prepareStatement("select DepartmentID from Student where MatricNo=?");
             ps.setString(1, matricNo);
             ResultSet rs1 = ps.executeQuery();
             
             while(rs1.next()){
-                if (schoolID == rs.getInt("SchoolID")){
+                if (departmentID == rs1.getInt("DepartmentID")){
                     isStudent = true;
                 }
             }
@@ -716,9 +725,9 @@ private final Dictionary<String, Integer> courseNameDict;
         }catch(Exception e){
             System.out.println(e);
         }
+        
         return isStudent;
     }
-    
     
     
     private void view_attendance_sheet_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_attendance_sheet_buttonActionPerformed
@@ -732,9 +741,7 @@ private final Dictionary<String, Integer> courseNameDict;
         if(value != null){
             String matricNo = String.valueOf(value);
             
-            if(isStudentAMemberOfSchool(this.loggedInFaculty.department, matricNo)){
-            
-        
+            if(isStudentAMemberOfDepartment(this.loggedInFaculty.department, matricNo)){        
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
@@ -761,7 +768,7 @@ private final Dictionary<String, Integer> courseNameDict;
                         float totalAttendanceSheetSigned = getSumofAttendanceSignedByStudent(
                                 rs.getInt("CourseID"), matricNo
                         );
-                        //System.out.println(totalAttendanceSheetSigned);
+                        
                         float attendancePercentage = 0;
                         if(totalAttendanceSheetSigned > 0){
                             attendancePercentage = (totalAttendanceSheet / totalAttendanceSheetSigned) * 100;
@@ -780,6 +787,13 @@ private final Dictionary<String, Integer> courseNameDict;
         System.out.println(attendanceSheet);
     }//GEN-LAST:event_view_attendance_sheet_buttonActionPerformed
 
+    private void logout_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout_buttonActionPerformed
+        // TODO add your handling code here:
+        new FacultyLogIn().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logout_buttonActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -820,7 +834,6 @@ private final Dictionary<String, Integer> courseNameDict;
     private javax.swing.JLabel department_label;
     private javax.swing.JLabel first_name_label;
     private javax.swing.JButton give_concession_button;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -829,6 +842,7 @@ private final Dictionary<String, Integer> courseNameDict;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel last_name_label;
+    private javax.swing.JButton logout_button;
     private javax.swing.JButton register_student_button;
     private javax.swing.JLabel role_label;
     private javax.swing.JLabel show_label;
