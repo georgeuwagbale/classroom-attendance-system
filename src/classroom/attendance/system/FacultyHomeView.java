@@ -90,6 +90,12 @@ private final Dictionary<String, Integer> courseNameDict;
             allocate_course_to_lecturer_button.setVisible(false);
             sign_student_out_button.setVisible(false);
             
+        }else if(this.loggedInFaculty.role.equals("Program Coordinator")){
+            start_attendance_button.setVisible(false);
+            stop_attendance_button.setVisible(false);
+            allocate_course_to_lecturer_button.setVisible(false);
+            sign_student_out_button.setVisible(false);
+            give_concession_button.setVisible(false);
         }
         
     }
@@ -294,6 +300,11 @@ private final Dictionary<String, Integer> courseNameDict;
         sign_student_out_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         sign_student_out_button.setText("Sign Student Out");
         sign_student_out_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
+        sign_student_out_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sign_student_out_buttonActionPerformed(evt);
+            }
+        });
 
         start_attendance_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         start_attendance_button.setText("Start Attendance");
@@ -780,11 +791,12 @@ private final Dictionary<String, Integer> courseNameDict;
         String studentName = "";
         
         //if(this.loggedInFaculty.role.equals("HOD") || this.loggedInFaculty.role.equals("Program Coordinator")){
-            Object value = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
+            Object value1 = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
                     "Matric No", 1);
-
-            if(value != null){
-                String matricNo = String.valueOf(value);
+            
+            
+            if(value1 != null ){
+                String matricNo = String.valueOf(value1);
 
                 if(isStudentAMemberOfDepartment(this.loggedInFaculty.department, matricNo)){        
                     try{
@@ -858,7 +870,90 @@ private final Dictionary<String, Integer> courseNameDict;
 
     private void give_concession_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_give_concession_buttonActionPerformed
         // TODO add your handling code here:
+        Object value = JOptionPane.showInputDialog(rootPane, "Enter Student's Matric NO.",
+                "Matric NO", 1);
+        
+        Object value2 = JOptionPane.showInputDialog(rootPane, "Enter Course Code",
+                    "Course Code", 1);
+        
+        Object value3 = JOptionPane.showInputDialog(rootPane, "Please Enter Message to Program Coordinator ",
+                    "Enter Message", 1);
+        
+        
+        String studentName = "";
+        String courseName = "";
+        String courseCode = "";
+        String message = "";
+        
+        if (value != null&& value2 != null && value3!=null){
+            
+            String matricNo = String.valueOf(value);
+            courseCode = String.valueOf(value2);
+            message = String.valueOf(value3);
+            try{
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
+                PreparedStatement ps = con.prepareStatement("select * from User where UserID in("
+                        + "select UserID from Student where MatricNo=?"
+                        + ")");
+                ps.setString(1, matricNo);
+                ResultSet rs = ps.executeQuery();
+                
+                while(rs.next()){
+                    studentName = rs.getString("FirstName") + " " + rs.getString("LastName");
+                    break;
+                }
+                
+                ps = con.prepareStatement("select * from Course where Code=?");
+                ps.setString(1, courseCode);
+                ResultSet rs1 = ps.executeQuery();
+                
+                while(rs1.next()){
+                    courseName = rs1.getString("Name");
+                }
+                String text = message + "\n\n" + "\n" + studentName + courseName + "\n" + courseCode;
+                text_area.setText(text);
+                text_area.print();
+                text_area.setText(null);
+                
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
     }//GEN-LAST:event_give_concession_buttonActionPerformed
+
+    private void sign_student_out_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sign_student_out_buttonActionPerformed
+        // TODO add your handling code here:
+        
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date date_ = new java.sql.Date(calendar.getTime().getTime());
+        java.sql.Time time_ = new java.sql.Time(date_.getTime());
+        
+        try{
+            // Start
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS","root", "example");
+            PreparedStatement ps = con.prepareStatement("select * from Attendance where "
+                    + "Date=? and Status=?");
+           ps.setDate(1, date_);
+           ps.setInt(2, 1);
+           int courseID = 0;
+           ResultSet rs = ps.executeQuery();
+           
+           while(rs.next()){
+               courseID = rs.getInt("CourseID");
+               
+               break;
+           }
+           if (courseID > 0){
+            new StudentSignOutView(courseID).setVisible(true);
+           }else{
+               JOptionPane.showMessageDialog(rootPane, "No Open attendance", "Error", 0);
+           }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_sign_student_out_buttonActionPerformed
 
     
     /**
