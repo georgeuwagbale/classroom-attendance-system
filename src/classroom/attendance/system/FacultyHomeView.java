@@ -113,7 +113,8 @@ private final Dictionary<String, Integer> courseNameDict;
         jLabel7 = new javax.swing.JLabel();
         role_label = new javax.swing.JLabel();
         logout_button = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        text_area = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         register_student_button = new javax.swing.JButton();
         allocate_course_to_lecturer_button = new javax.swing.JButton();
@@ -123,12 +124,16 @@ private final Dictionary<String, Integer> courseNameDict;
         sign_student_out_button = new javax.swing.JButton();
         start_attendance_button = new javax.swing.JButton();
         stop_attendance_button = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         show_label.setBackground(new java.awt.Color(255, 255, 255));
+        show_label.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         show_label.setOpaque(true);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -165,16 +170,16 @@ private final Dictionary<String, Integer> courseNameDict;
 
         logout_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         logout_button.setText("Logout");
-        logout_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        logout_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         logout_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logout_buttonActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setText("Change Password");
-        jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_area.setColumns(20);
+        text_area.setRows(5);
+        jScrollPane1.setViewportView(text_area);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -184,7 +189,8 @@ private final Dictionary<String, Integer> courseNameDict;
                 .addGap(70, 70, 70)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addGap(247, 247, 247)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logout_button, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -205,7 +211,7 @@ private final Dictionary<String, Integer> courseNameDict;
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(role_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(department_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(show_label, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(19, 19, 19))
         );
@@ -231,22 +237,27 @@ private final Dictionary<String, Integer> courseNameDict;
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(role_label))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logout_button)
-                    .addComponent(jButton2))
-                .addGap(22, 22, 22))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logout_button)
+                        .addGap(22, 22, 22))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
+        jPanel2.setBackground(java.awt.Color.white);
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         register_student_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         register_student_button.setText("Register Student");
-        register_student_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        register_student_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
 
         allocate_course_to_lecturer_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         allocate_course_to_lecturer_button.setText("Allocate Course To Lecturer");
-        allocate_course_to_lecturer_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        allocate_course_to_lecturer_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         allocate_course_to_lecturer_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allocate_course_to_lecturer_buttonActionPerformed(evt);
@@ -255,7 +266,7 @@ private final Dictionary<String, Integer> courseNameDict;
 
         view_attendance_sheet_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         view_attendance_sheet_button.setText("View Attendance Sheet");
-        view_attendance_sheet_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        view_attendance_sheet_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         view_attendance_sheet_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 view_attendance_sheet_buttonActionPerformed(evt);
@@ -264,7 +275,7 @@ private final Dictionary<String, Integer> courseNameDict;
 
         view_attendance_percentage_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         view_attendance_percentage_button.setText("View Attendance Percentage");
-        view_attendance_percentage_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        view_attendance_percentage_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         view_attendance_percentage_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 view_attendance_percentage_buttonActionPerformed(evt);
@@ -273,15 +284,20 @@ private final Dictionary<String, Integer> courseNameDict;
 
         give_concession_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         give_concession_button.setText("Give Concession");
-        give_concession_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        give_concession_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
+        give_concession_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                give_concession_buttonActionPerformed(evt);
+            }
+        });
 
         sign_student_out_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         sign_student_out_button.setText("Sign Student Out");
-        sign_student_out_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        sign_student_out_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
 
         start_attendance_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         start_attendance_button.setText("Start Attendance");
-        start_attendance_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        start_attendance_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         start_attendance_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 start_attendance_buttonActionPerformed(evt);
@@ -290,7 +306,7 @@ private final Dictionary<String, Integer> courseNameDict;
 
         stop_attendance_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         stop_attendance_button.setText("Stop Attendance");
-        stop_attendance_button.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        stop_attendance_button.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
         stop_attendance_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stop_attendance_buttonActionPerformed(evt);
@@ -307,7 +323,7 @@ private final Dictionary<String, Integer> courseNameDict;
                     .addComponent(register_student_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(allocate_course_to_lecturer_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(view_attendance_sheet_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(view_attendance_percentage_button, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                    .addComponent(view_attendance_percentage_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(give_concession_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sign_student_out_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(start_attendance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -332,8 +348,30 @@ private final Dictionary<String, Integer> courseNameDict;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(start_attendance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(stop_attendance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(22, 22, 22))
+                .addComponent(stop_attendance_button, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBackground(java.awt.Color.white);
+        jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\uwagb\\Downloads\\pau_logo.jpeg")); // NOI18N
+        jLabel2.setOpaque(true);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -342,19 +380,24 @@ private final Dictionary<String, Integer> courseNameDict;
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(16, 16, 16))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -734,8 +777,9 @@ private final Dictionary<String, Integer> courseNameDict;
         String attendanceSheet = "";
         String courseName = "";
         String courseCode  = "";
+        String studentName = "";
         
-        if(this.loggedInFaculty.role.equals("HOD") || this.loggedInFaculty.role.equals("Program Coordinator")){
+        //if(this.loggedInFaculty.role.equals("HOD") || this.loggedInFaculty.role.equals("Program Coordinator")){
             Object value = JOptionPane.showInputDialog(rootPane, "Enter Matric No",
                     "Matric No", 1);
 
@@ -746,7 +790,20 @@ private final Dictionary<String, Integer> courseNameDict;
                     try{
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                        PreparedStatement ps = con.prepareStatement("select CourseID from StudentCourse where StudentID in ("
+                        PreparedStatement ps = con.prepareStatement("select FirstName, LastName from User where UserID in("
+                                + "select UserID from Student where MatricNo=?"
+                                + ")");
+                        ps.setString(1, matricNo);
+                        
+                        ResultSet rs_ = ps.executeQuery();
+                        
+                        while(rs_.next()){
+                            studentName = rs_.getString("FirstName") + " " + rs_.getString("LastName");
+                        }
+                        
+                        attendanceSheet = studentName;
+                        
+                         ps = con.prepareStatement("select CourseID from StudentCourse where StudentID in ("
                                 + "select StudentID from Student where MatricNo=?"
                                 + ")");
                         ps.setString(1, matricNo);
@@ -775,17 +832,21 @@ private final Dictionary<String, Integer> courseNameDict;
                                 attendancePercentage = (totalAttendanceSheet / totalAttendanceSheetSigned) * 100;
                             }
 
-                            attendanceSheet += "\n" + courseName + " : " + courseCode + " " + String.valueOf(attendancePercentage);
+                            attendanceSheet += "\n\nCourse Name: " + courseName + "\nCourse Code: " + courseCode + "\n Percentage: " + String.valueOf(attendancePercentage);
 
                         }
+                        //new AttendanceSheet(matricNo , attendanceSheet).setVisible(false);
+                        text_area.setText(attendanceSheet);
+                        text_area.print();
                     }catch(Exception e){
                         System.out.println(e);
                     }
+                    
                 }else{
                     JOptionPane.showMessageDialog(rootPane, "Student is not in this department");
                 }
             }
-        }
+        //}
         System.out.println(attendanceSheet);
     }//GEN-LAST:event_view_attendance_sheet_buttonActionPerformed
 
@@ -794,6 +855,10 @@ private final Dictionary<String, Integer> courseNameDict;
         new FacultyLogIn().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_logout_buttonActionPerformed
+
+    private void give_concession_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_give_concession_buttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_give_concession_buttonActionPerformed
 
     
     /**
@@ -836,13 +901,15 @@ private final Dictionary<String, Integer> courseNameDict;
     private javax.swing.JLabel department_label;
     private javax.swing.JLabel first_name_label;
     private javax.swing.JButton give_concession_button;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel last_name_label;
     private javax.swing.JButton logout_button;
     private javax.swing.JButton register_student_button;
@@ -851,6 +918,7 @@ private final Dictionary<String, Integer> courseNameDict;
     private javax.swing.JButton sign_student_out_button;
     private javax.swing.JButton start_attendance_button;
     private javax.swing.JButton stop_attendance_button;
+    private javax.swing.JTextArea text_area;
     private javax.swing.JButton view_attendance_percentage_button;
     private javax.swing.JButton view_attendance_sheet_button;
     // End of variables declaration//GEN-END:variables

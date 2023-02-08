@@ -130,106 +130,98 @@ private int departmentID;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         student_name_label = new javax.swing.JLabel();
-        department_label = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         data_list = new javax.swing.JList<>();
-        combo_box = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        department_label = new javax.swing.JLabel();
+        combo_box = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jPanel1.setBackground(java.awt.Color.white);
 
         student_name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         student_name_label.setText("Student's Name");
 
+        data_list.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black)));
+        data_list.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        data_list.setForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setViewportView(data_list);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Courses Offered ");
+
         department_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         department_label.setText("Department");
 
-        data_list.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        data_list.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                data_listMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(data_list);
-
         combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Select--" }));
-        combo_box.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                combo_boxActionPerformed(evt);
-            }
-        });
+        combo_box.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black, java.awt.Color.black));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Courses Offered ");
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Available Courses");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(student_name_label)
+                                .addGap(179, 179, 179)
+                                .addComponent(department_label))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(42, 42, 42)
+                                .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(181, 181, 181)
+                        .addComponent(jLabel1)))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(student_name_label)
+                    .addComponent(department_label))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(student_name_label, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                .addGap(256, 256, 256)
-                .addComponent(department_label, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                .addGap(19, 19, 19))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(206, 206, 206)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
-                .addGap(199, 199, 199))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(student_name_label)
-                    .addComponent(department_label))
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void data_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_data_listMouseClicked
-        // TODO add your handling code here:
-        String item_clicked = data_list.getSelectedValue();
-        if(item_clicked != null){
-            int CourseID = this.courseNameDict.get(item_clicked);
-
-            int value = JOptionPane.showConfirmDialog(rootPane,
-                "Are you sure you want to remove course", "Course Removal", 0, 2);
-
-            if (value == 0){
-                try{
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                    PreparedStatement ps = con.prepareStatement("delete from StudentCourse where CourseID=?");
-                    ps.setInt(1, CourseID);
-                    ps.execute();
-                    con.close();
-
-                    populateDataList();
-                    // HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
-                }catch(Exception e){
-                    System.out.println(e);
-                }
-            }
-        }
-    }//GEN-LAST:event_data_listMouseClicked
 
     
     public boolean checkForCourseMultiplicity(int userID, int courseID){
@@ -257,49 +249,6 @@ private int departmentID;
     } 
     
     
-    private void combo_boxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_boxActionPerformed
-        // TODO add your handling code here:
-        String selectedCourse = combo_box.getSelectedItem().toString();
-
-        if (selectedCourse != null){
-            int CourseID = this.courseNameDict.get(selectedCourse);
-            int value = JOptionPane.showConfirmDialog(rootPane,
-                "Are you sure you want to add " + selectedCourse , "Course Addition", 0, 2);
-            if (value == 0){
-
-                if(!checkForCourseMultiplicity(this.userID, CourseID)){
-                    try{
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CAS", "root", "example");
-                        PreparedStatement ps1 = con.prepareStatement("select StudentID from Student where UserID=?");
-                        ps1.setInt(1, this.userID);
-                        ResultSet rs1 = ps1.executeQuery();
-                        
-                        while(rs1.next()){
-                            PreparedStatement ps = con.prepareStatement("insert into StudentCourse("
-                            + "StudentID,CourseID"
-                            + ")"
-                            + "values (?,?)");
-                            ps.setInt(1, rs1.getInt("StudentID"));
-                            ps.setInt(2, CourseID);
-                            ps.executeUpdate();
-                            break;
-                        }
-                        
-                        con.close();
-
-                        populateDataList();
-                        //HODAllocateCourseToLecturerView.populateDataTable(this.departmentID);
-                    }catch(Exception e){
-                        System.out.println(e);
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Course already assigned to Student", "Error", 0);
-                }
-            }
-        }
-    }//GEN-LAST:event_combo_boxActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -340,6 +289,8 @@ private int departmentID;
     private javax.swing.JList<String> data_list;
     private javax.swing.JLabel department_label;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel student_name_label;
     // End of variables declaration//GEN-END:variables
